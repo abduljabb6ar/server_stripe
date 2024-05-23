@@ -4,6 +4,9 @@ const stripe=require('stripe')(process.env.STRIPE_SECRIT)
 const port=3000||process.env.PORT;
 var app=express();
 app.set('view engine','ejs');
+app.get('/',(req,res)=>{
+res.render('index')
+});
 var bodyparse=require('body-parser');
 app.use(
     bodyparse.urlencoded({
@@ -12,7 +15,7 @@ app.use(
 );
 app.post('/create-checkout-session', async (req, res) => {
     try {
-        const price = req.body.price;
+        // const price = req.body.price;
 
         const session = await stripe.checkout.sessions.create({
             line_items: [{
@@ -21,7 +24,7 @@ app.post('/create-checkout-session', async (req, res) => {
                     product_data: {
                         name: 'عسل سدر طبيعي',
                     },
-                    unit_amount: price * 50 // تحويل السعر إلى سنتات
+                    unit_amount: 10 * 50 // تحويل السعر إلى سنتات
                 },
                 quantity: 1
             }],
@@ -30,7 +33,9 @@ app.post('/create-checkout-session', async (req, res) => {
             cancel_url: 'https://ghidhaalruwh.netlify.app/cancel'
         });
 
-        res.redirect(303,session.url); // توجيه المستخدم إلى صفحة الدفع في Stripe
+
+      res.redirect(session.url); // توجيه المستخدم إلى صفحة الدفع في Stripe
+
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send('Error occurred');
