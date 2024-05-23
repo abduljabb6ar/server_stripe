@@ -30,7 +30,7 @@ app.post('/create-checkout-session', async (req, res) => {
             cancel_url: 'https://ghidhaalruwh.netlify.app/cancel'
         });
 
-        res.redirect(session.url); // توجيه المستخدم إلى صفحة الدفع في Stripe
+        res.redirect(303,session.url); // توجيه المستخدم إلى صفحة الدفع في Stripe
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send('Error occurred');
