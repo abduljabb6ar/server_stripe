@@ -1,12 +1,18 @@
 require("dotenv").config();
 var express=require('express');
 const stripe=require('stripe')(process.env.STRIPE_SECRIT)
+const port=3000||process.env.PORT;
 var app=express();
 app.set('view engine','ejs');
-app.get('/',(req,res)=>{
-res.render('index')
-});
+var bodyparse=require('body-parser');
+app.use(
+    bodyparse.urlencoded({
+        extended:false
+    })
+);
 app.post('/checkout', async(req,res)=>{
+    const pric=req.body.price
+    console.log(pric)
     const sessstion=await stripe.checkout.sessions.create({
         line_items:[
             {
@@ -15,7 +21,7 @@ app.post('/checkout', async(req,res)=>{
                     product_data:{
                         name:'عسل سدر طبيعي',
                     },
-                    unit_amount:1*50
+                    unit_amount:pric*50
                 },
                 quantity:1
             }
@@ -40,4 +46,4 @@ app.get('/complate',async(req,res)=>{
 app.get('/cancel',(rez,res)=>{
     res.redirect('/')
     })
-app.listen(8000,(req,res)=>{console.log('that is server 8000');});
+app.listen(port,(req,res)=>{console.log(`that is server ${port}`);});
