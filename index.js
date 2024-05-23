@@ -27,8 +27,8 @@ app.post('/checkout', async(req,res)=>{
             }
         ],
         mode:'payment',
-        success_url:'http://localhost:8000/complate',
-        cancel_url:'http://localhost:8000/cancel'
+        success_url:'https://ghidhaalruwh.netlify.app/',
+        cancel_url:'https://ghidhaalruwh.netlify.app/'
     })
 
     // console.log(sessstion)
