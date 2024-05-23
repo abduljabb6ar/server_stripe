@@ -10,30 +10,32 @@ app.use(
         extended:false
     })
 );
-app.post('/checkout', async(req,res)=>{
-    const pric=req.body.price
-    console.log(pric)
-    const sessstion=await stripe.checkout.sessions.create({
-        line_items:[
-            {
-                price_data:{
-                    currency:'usd',
-                    product_data:{
-                        name:'عسل سدر طبيعي',
-                    },
-                    unit_amount:pric*50
-                },
-                quantity:1
-            }
-        ],
-        mode:'payment',
-        success_url:'https://ghidhaalruwh.netlify.app/',
-        cancel_url:'https://ghidhaalruwh.netlify.app/'
-    })
+app.post('/checkout', async (req, res) => {
+    try {
+        const price = req.body.price;
 
-    // console.log(sessstion)
-    res.redirect(sessstion.url)
-}) 
+        const session = await stripe.checkout.sessions.create({
+            line_items: [{
+                price_data: {
+                    currency: 'usd',
+                    product_data: {
+                        name: 'عسل سدر طبيعي',
+                    },
+                    unit_amount: price * 50 // تحويل السعر إلى سنتات
+                },
+                quantity: 1
+            }],
+            mode: 'payment',
+            success_url: 'https://ghidhaalruwh.netlify.app/complate',
+            cancel_url: 'https://ghidhaalruwh.netlify.app/cancel'
+        });
+
+        res.redirect(session.url); // توجيه المستخدم إلى صفحة الدفع في Stripe
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Error occurred');
+    }
+});
 app.get('/complate',async(req,res)=>{
     try{
       await  paypal.capturpayment(req.query.token)
