@@ -10,7 +10,7 @@ app.use(
         extended:false
     })
 );
-app.post('/checkout', async (req, res) => {
+app.post('/create-checkout-session', async (req, res) => {
     try {
         const price = req.body.price;
 
