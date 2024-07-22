@@ -1,5 +1,6 @@
 require("dotenv").config();
 var express=require('express');
+const cors = require('cors');
 const stripe=require('stripe')(process.env.STRIPE_SECRIT)
 const port=3000||process.env.PORT;
 var app=express();
@@ -7,7 +8,12 @@ app.set('view engine','ejs');
 app.get('/',(req,res)=>{
 res.render('index')
 });
-var bodyparse=require('body-parser');
+
+app.use(cors());
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 app.use(
     bodyparse.urlencoded({
         extended:false
